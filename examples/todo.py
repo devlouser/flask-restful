@@ -5,7 +5,6 @@ import sqlite3
 app = Flask(__name__)
 api = Api(app)
 
-# Establish database connection
 with sqlite3.connect('todo.db') as conn:
     conn.row_factory = sqlite3.Row  # Access columns by names
 
@@ -68,6 +67,8 @@ with sqlite3.connect('todo.db') as conn:
     class BatchTodoUpdate(Resource):
         def put(self):
             update_ids = request.json.get('update_ids', [])
+            if not all(isinstance(id, int) for id in update_ids):
+                abort(400, message="All IDs must be integers.")
             task_description = request.json.get('task', '')
             with get_db_connection() as conn:
                 cursor = conn.cursor()
@@ -76,7 +77,6 @@ with sqlite3.connect('todo.db') as conn:
                 conn.commit()
                 return f"Updated {len(update_ids)} tasks", 200
 
-# Actually setup the Api resource routing here
 api.add_resource(TodoList, '/todos')
 api.add_resource(Todo, '/todos/<string:todo_id>')
 api.add_resource(BatchTodoUpdate, '/todos/batch_update')
