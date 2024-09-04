@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_mysqldb import MySQL
 from calculations import calculate_discount  # Importing from calculations.py
-from db import get_users  # Importing from db.py
+from db import get_users, get_products  # Importing from db.py
 
 app = Flask(__name__)
 mysql = None
@@ -26,10 +26,10 @@ def users():
     return str(users_data)
 
 
-@app.route("/")
+@app.route("/products")
 def products():
     products = get_products(mysql)  # Using function from db.py
-    return str(products)
+    return jsonify(products)
 
 
 @app.route("/discount")
