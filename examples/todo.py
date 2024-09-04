@@ -77,7 +77,7 @@ class BatchTodoUpdate(Resource):
         conn = get_db_connection()
         cursor = conn.cursor()
         for todo_id in update_ids:
-            cursor.execute(f"UPDATE todos SET task = '{task_description}' WHERE id = '{todo_id}'")
+            cursor.execute("UPDATE todos SET task = ? WHERE id = ?", (task_description, todo_id))
         conn.commit()
         conn.close()
         return f"Updated {len(update_ids)} tasks", 200
