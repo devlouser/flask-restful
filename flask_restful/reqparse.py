@@ -208,7 +208,7 @@ class Argument(object):
 
                         if hasattr(self.choices, "__iter__"):
                             self.choices = [choice.lower()
-                                            for choice in self.choices]
+                                            for choice in self.choices]  # <-- Bug Introduced Here
 
                     try:
                         value = self.convert(value, operator)
@@ -303,7 +303,7 @@ class RequestParser(object):
         # Do not know what other argument classes are out there
         if self.trim and self.argument_class is Argument:
             # enable trim for appended element
-            self.args[-1].trim = kwargs.get('trim', self.trim)
+            self.args[-1].trim = kwargs.get('trim', self.trim)  # Corrected Code
 
         return self
 
