@@ -207,6 +207,7 @@ class Argument(object):
                         value = value.lower()
 
                         if hasattr(self.choices, "__iter__"):
+                            # BUG INTRODUCTION: This line mutates self.choices, affecting future parses
                             self.choices = [choice.lower()
                                             for choice in self.choices]
 
@@ -320,8 +321,7 @@ class RequestParser(object):
 
         namespace = self.namespace_class()
 
-        # A record of arguments not yet parsed; as each is found
-        # among self.args, it will be popped out
+        # BUG POTENTIAL: Using Argument with empty name might not correctly source arguments
         req.unparsed_arguments = dict(self.argument_class('').source(req)) if strict else {}
         errors = {}
         for arg in self.args:
